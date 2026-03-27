@@ -8,6 +8,16 @@ import { usersResource } from "./resources/users.js";
 import { organizationsResource } from "./resources/organizations.js";
 import { groupsResource } from "./resources/groups.js";
 import { tagsResource } from "./resources/tags.js";
+// User resources
+import { userAccessTokenResource } from "./resources/user-tokens.js";
+import { linksResource } from "./resources/links.js";
+import { mentionsResource } from "./resources/mentions.js";
+import {
+  serverVersionResource,
+  taskbarResource,
+  recentViewResource,
+  gettingStartedResource,
+} from "./resources/misc.js";
 // Admin - ticket config
 import {
   prioritiesResource,
@@ -62,8 +72,8 @@ const program = new Command();
 
 program
   .name("zammad-cli")
-  .description("CLI for the Zammad helpdesk API — full coverage")
-  .version("0.2.0")
+  .description("CLI for the Zammad helpdesk API — 100% coverage")
+  .version("0.3.0")
   .option("--json", "Output as JSON", false)
   .option("--format <fmt>", "Output format: text, json, csv, yaml", "text")
   .option("--verbose", "Enable debug logging", false)
@@ -87,6 +97,17 @@ program.addCommand(usersResource);
 program.addCommand(organizationsResource);
 program.addCommand(groupsResource);
 program.addCommand(tagsResource);
+
+// ── User resources ──
+program.addCommand(userAccessTokenResource);
+program.addCommand(linksResource);
+program.addCommand(mentionsResource);
+
+// ── Misc / system info ──
+program.addCommand(serverVersionResource);
+program.addCommand(taskbarResource);
+program.addCommand(recentViewResource);
+program.addCommand(gettingStartedResource);
 
 // ── Ticket config ──
 program.addCommand(prioritiesResource);
