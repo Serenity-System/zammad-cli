@@ -231,3 +231,46 @@ ticketsResource
       output({ removed: true, tag: opts.tag }, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── MASS UPDATE ──
+ticketsResource
+  .command("mass-update")
+  .description("Update multiple tickets at once")
+  .requiredOption("--ids <ids>", "Comma-separated ticket IDs")
+  .option("--state <name>", "New state for all tickets")
+  .option("--priority <id>", "New priority ID for all tickets")
+  .option("--group-id <id>", "New group ID for all tickets")
+  .option("--owner-id <id>", "New owner ID for all tickets")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try {
+      const body: Record<string, unknown> = {
+        ticket_ids: opts.ids.split(",").map(Number),
+        attributes: {} as Record<string, unknown>,
+      };
+      const attrs = body.attributes as Record<string, unknown>;
+      if (opts.state) attrs.state = opts.state;
+      if (opts.priority) attrs.priority_id = Number(opts.priority);
+      if (opts.groupId) attrs.group_id = Number(opts.groupId);
+      if (opts.ownerId) attrs.owner_id = Number(opts.ownerId);
+      const data = await client.post("/tickets/mass_update", body);
+      output(data, { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── MASS MACRO ──
+ticketsResource
+  .command("mass-macro")
+  .description("Apply a macro to multiple tickets")
+  .requiredOption("--ids <ids>", "Comma-separated ticket IDs")
+  .requiredOption("--macro-id <id>", "Macro ID to apply")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try {
+      const data = await client.post("/tickets/mass_macro", {
+        ticket_ids: opts.ids.split(",").map(Number),
+        macro_id: Number(opts.macroId),
+      });
+      output(data, { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });

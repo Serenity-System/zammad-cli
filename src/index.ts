@@ -67,13 +67,45 @@ import {
   translationsResource,
   integrationsResource,
 } from "./resources/admin-system.js";
+// NEW: Checklists
+import {
+  checklistsResource,
+  checklistItemsResource,
+  checklistTemplatesResource,
+} from "./resources/checklists.js";
+// NEW: Knowledge Base
+import { knowledgeBaseResource } from "./resources/knowledge-base.js";
+// NEW: Channels (SMS, Telegram, Twitter, Facebook, WhatsApp, MS Graph)
+import {
+  channelsSmsResource,
+  channelsTelegramResource,
+  channelsTwitterResource,
+  channelsFacebookResource,
+  channelsWhatsappResource,
+  channelsMicrosoftGraphResource,
+} from "./resources/channels.js";
+// NEW: Chats
+import { chatsResource, chatSessionsResource } from "./resources/chats.js";
+// NEW: OAuth Applications
+import { applicationsResource } from "./resources/applications.js";
+// NEW: Extra admin (LDAP, SSL, HTTP logs, Reports, User devices, Search, Overview sortings, Ticket stats)
+import {
+  ldapSourcesResource,
+  sslCertificatesResource,
+  httpLogsResource,
+  reportsResource,
+  userDevicesResource,
+  searchResource,
+  userOverviewSortingsResource,
+  ticketStatsResource,
+} from "./resources/admin-extra.js";
 
 const program = new Command();
 
 program
   .name("zammad-cli")
   .description("CLI for the Zammad helpdesk API — 100% coverage")
-  .version("0.3.0")
+  .version("0.4.0")
   .option("--json", "Output as JSON", false)
   .option("--format <fmt>", "Output format: text, json, csv, yaml", "text")
   .option("--verbose", "Enable debug logging", false)
@@ -152,5 +184,38 @@ program.addCommand(sessionsResource);
 program.addCommand(activityStreamResource);
 program.addCommand(translationsResource);
 program.addCommand(integrationsResource);
+
+// ── NEW: Checklists ──
+program.addCommand(checklistsResource);
+program.addCommand(checklistItemsResource);
+program.addCommand(checklistTemplatesResource);
+
+// ── NEW: Knowledge Base ──
+program.addCommand(knowledgeBaseResource);
+
+// ── NEW: Channels (social/messaging) ──
+program.addCommand(channelsSmsResource);
+program.addCommand(channelsTelegramResource);
+program.addCommand(channelsTwitterResource);
+program.addCommand(channelsFacebookResource);
+program.addCommand(channelsWhatsappResource);
+program.addCommand(channelsMicrosoftGraphResource);
+
+// ── NEW: Chats ──
+program.addCommand(chatsResource);
+program.addCommand(chatSessionsResource);
+
+// ── NEW: OAuth Applications ──
+program.addCommand(applicationsResource);
+
+// ── NEW: Extra admin ──
+program.addCommand(ldapSourcesResource);
+program.addCommand(sslCertificatesResource);
+program.addCommand(httpLogsResource);
+program.addCommand(reportsResource);
+program.addCommand(userDevicesResource);
+program.addCommand(searchResource);
+program.addCommand(userOverviewSortingsResource);
+program.addCommand(ticketStatsResource);
 
 program.parse();

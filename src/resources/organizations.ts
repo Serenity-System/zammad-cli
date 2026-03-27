@@ -100,3 +100,14 @@ organizationsResource.command("delete")
       output({ deleted: true, id }, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── HISTORY ──
+organizationsResource.command("history")
+  .description("Get history for an organization")
+  .argument("<id>", "Organization ID")
+  .option("--json", "Output as JSON")
+  .action(async (id, opts) => {
+    try {
+      output(await client.get(`/organizations/history/${id}`), { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });

@@ -120,3 +120,57 @@ usersResource.command("delete")
       output({ deleted: true, id }, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── HISTORY ──
+usersResource.command("history")
+  .description("Get history for a user")
+  .argument("<id>", "User ID")
+  .option("--json", "Output as JSON")
+  .action(async (id, opts) => {
+    try {
+      output(await client.get(`/users/history/${id}`), { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── AVATAR ──
+usersResource.command("avatar-list")
+  .description("List avatars for current user")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try {
+      output(await client.get("/users/avatar"), { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── OUT OF OFFICE ──
+usersResource.command("out-of-office")
+  .description("Set out of office for current user")
+  .requiredOption("--enabled <bool>", "true or false")
+  .option("--from <date>", "Start date (YYYY-MM-DD)")
+  .option("--to <date>", "End date (YYYY-MM-DD)")
+  .option("--replacement-id <id>", "Replacement user ID")
+  .option("--text <text>", "Out of office text")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try {
+      const body: Record<string, unknown> = {
+        out_of_office: opts.enabled === "true",
+      };
+      if (opts.from) body.out_of_office_start_at = opts.from;
+      if (opts.to) body.out_of_office_end_at = opts.to;
+      if (opts.replacementId) body.out_of_office_replacement_id = Number(opts.replacementId);
+      if (opts.text) body.preferences = { out_of_office_text: opts.text };
+      output(await client.put("/users/out_of_office", body), { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── PREFERENCES ──
+usersResource.command("preferences")
+  .description("Update current user preferences")
+  .requiredOption("--data <json>", "Preferences as JSON")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try {
+      output(await client.put("/users/preferences", JSON.parse(opts.data)), { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });
