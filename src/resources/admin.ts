@@ -422,3 +422,7 @@ notificationsResource.command("mark-all-read")
       output(data ?? { ok: true }, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── OVERVIEWS PRIO ──
+overviewsResource.command("prio").description("Set overview priorities/order").requiredOption("--data <json>", "Priority JSON").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/overviews_prio", JSON.parse(opts.data)), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });

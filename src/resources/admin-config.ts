@@ -314,3 +314,11 @@ publicLinksResource.command("delete")
       output({ deleted: true, id }, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── SETTINGS NOTIFICATION DEFAULTS ──
+settingsResource.command("apply-notification-defaults").description("Apply defaults to all agents").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/settings/ticket_agent_default_notifications/apply_to_all"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+
+// ── PUBLIC LINKS PRIO ──
+publicLinksResource.command("prio").description("Set public links order").requiredOption("--data <json>", "Priority JSON").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/public_links_prio", JSON.parse(opts.data)), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });

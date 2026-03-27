@@ -274,3 +274,39 @@ ticketsResource
       output(data, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── SPLIT ──
+ticketsResource
+  .command("split")
+  .description("Get ticket split data")
+  .argument("<ticket-id>", "Ticket ID")
+  .argument("<article-id>", "Article ID")
+  .option("--json", "Output as JSON")
+  .action(async (ticketId, articleId, opts) => {
+    try {
+      const data = await client.get("/ticket_split", { ticket_id: ticketId, article_id: articleId });
+      output(data, { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });
+
+ticketsResource
+  .command("overview")
+  .description("Get ticket overview data")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try {
+      const data = await client.get("/ticket_overviews");
+      output(data, { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });
+
+ticketsResource
+  .command("recent")
+  .description("Get recently viewed tickets")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try {
+      const data = await client.get("/ticket_recent");
+      output(data, { json: opts.json });
+    } catch (err) { handleError(err, opts.json); }
+  });

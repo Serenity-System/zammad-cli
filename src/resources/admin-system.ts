@@ -278,3 +278,41 @@ integrationsResource.command("gitlab")
       output(data, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── CALENDARS EXTRA ──
+calendarsResource.command("timezones").description("List available timezones").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/calendars/timezones"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+calendarsResource.command("init").description("Get calendar init data").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/calendars_init"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+
+// ── MONITORING EXTRA ──
+monitoringResource.command("amount-check").description("Check system amount limits").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/monitoring/amount_check"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+monitoringResource.command("restart-failed-jobs").description("Restart failed background jobs").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/monitoring/restart_failed_jobs"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+monitoringResource.command("token").description("Generate monitoring access token").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/monitoring/token"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+
+// ── TRANSLATIONS EXTRA ──
+translationsResource.command("customized").description("List customized translations").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/translations/customized"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+translationsResource.command("push").description("Push translations").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.put("/translations/push"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+translationsResource.command("reset").description("Reset translations").requiredOption("--locale <locale>", "Locale").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/translations/reset", { locale: opts.locale }), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+translationsResource.command("upsert").description("Create/update translation").requiredOption("--locale <locale>", "Locale").requiredOption("--source <text>", "Source").requiredOption("--target <text>", "Target").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/translations/upsert", { locale: opts.locale, source: opts.source, target: opts.target }), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+
+// ── SYSTEM REPORT EXTRA ──
+systemReportResource.command("download").description("Download system report").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/system_report/download"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+systemReportResource.command("plugins").description("List system report plugins").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/system_report/plugins"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+
+// ── DATA PRIVACY EXTRA ──
+dataPrivacyTasksResource.command("by-state").description("List tasks by state").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/data_privacy_tasks/by_state"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+
+// ── SESSIONS EXTRA ──
+sessionsResource.command("switch-back").description("Switch back from impersonated session").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/sessions/switch_back"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });

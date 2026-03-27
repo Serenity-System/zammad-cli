@@ -111,3 +111,9 @@ organizationsResource.command("history")
       output(await client.get(`/organizations/history/${id}`), { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── IMPORT ──
+organizationsResource.command("import").description("Import organizations from CSV").requiredOption("--data <json>", "Data JSON").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/organizations/import", JSON.parse(opts.data)), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+organizationsResource.command("import-example").description("Download CSV import example").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/organizations/import_example"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });

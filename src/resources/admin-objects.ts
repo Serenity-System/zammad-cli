@@ -230,3 +230,9 @@ templatesResource.command("delete")
       output({ deleted: true, id }, { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── TEXT MODULES IMPORT ──
+textModulesResource.command("import").description("Import text modules").requiredOption("--data <json>", "Data JSON").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.post("/text_modules/import", JSON.parse(opts.data)), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });
+textModulesResource.command("import-example").description("Download import example").option("--json", "Output as JSON")
+  .action(async (opts) => { try { output(await client.get("/text_modules/import_example"), { json: opts.json }); } catch (err) { handleError(err, opts.json); } });

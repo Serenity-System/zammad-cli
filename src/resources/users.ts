@@ -174,3 +174,176 @@ usersResource.command("preferences")
       output(await client.put("/users/preferences", JSON.parse(opts.data)), { json: opts.json });
     } catch (err) { handleError(err, opts.json); }
   });
+
+// ── IMPORT ──
+usersResource.command("import")
+  .description("Import users from CSV")
+  .requiredOption("--data <json>", "Import data JSON")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/import", JSON.parse(opts.data)), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("import-example")
+  .description("Download CSV import example")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.get("/users/import_example"), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── PASSWORD ──
+usersResource.command("password-change")
+  .description("Change current user password")
+  .requiredOption("--current <pass>", "Current password")
+  .requiredOption("--new <pass>", "New password")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/password_change", { password_old: opts.current, password_new: opts.new }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("password-check")
+  .description("Check if a password is valid")
+  .requiredOption("--password <pass>", "Password")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/password_check", { password: opts.password }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("password-reset")
+  .description("Request a password reset")
+  .requiredOption("--username <user>", "Username/email")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/password_reset", { username: opts.username }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("password-reset-verify")
+  .description("Verify a password reset token")
+  .requiredOption("--token <token>", "Reset token")
+  .requiredOption("--password <pass>", "New password")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/password_reset_verify", { token: opts.token, password: opts.password }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── AVATAR ──
+usersResource.command("avatar-set")
+  .description("Set user avatar")
+  .requiredOption("--data <json>", "Avatar data JSON")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/avatar/set", JSON.parse(opts.data)), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── TWO-FACTOR AUTH ──
+usersResource.command("2fa-config")
+  .description("Get personal 2FA configuration")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.get("/users/two_factor/personal_configuration"), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("2fa-methods")
+  .description("Get enabled 2FA methods")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/two_factor/enabled_authentication_methods"), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("2fa-recovery-codes")
+  .description("Generate new 2FA recovery codes")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/two_factor/recovery_codes_generate"), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("2fa-set-default")
+  .description("Set default 2FA method")
+  .requiredOption("--method <name>", "Method name")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/two_factor/default_authentication_method", { method: opts.method }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("2fa-remove")
+  .description("Remove a 2FA method")
+  .requiredOption("--method <name>", "Method name")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { await client.delete("/users/two_factor/remove_authentication_method?method=" + opts.method); output({ removed: true, method: opts.method }, { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("2fa-verify")
+  .description("Verify 2FA configuration")
+  .requiredOption("--data <json>", "Verification data JSON")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/two_factor/verify_configuration", JSON.parse(opts.data)), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── ADMIN 2FA ──
+usersResource.command("admin-2fa-methods")
+  .description("Get 2FA methods for a user (admin)")
+  .argument("<user-id>", "User ID")
+  .option("--json", "Output as JSON")
+  .action(async (userId, opts) => {
+    try { output(await client.get("/users/" + userId + "/admin_two_factor/enabled_authentication_methods"), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("admin-2fa-remove-all")
+  .description("Remove all 2FA methods for a user (admin)")
+  .argument("<user-id>", "User ID")
+  .option("--json", "Output as JSON")
+  .action(async (userId, opts) => {
+    try { await client.delete("/users/" + userId + "/admin_two_factor/remove_all_authentication_methods"); output({ removed_all: true, user_id: userId }, { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("admin-2fa-remove")
+  .description("Remove a specific 2FA method for a user (admin)")
+  .argument("<user-id>", "User ID")
+  .requiredOption("--method <name>", "Method name")
+  .option("--json", "Output as JSON")
+  .action(async (userId, opts) => {
+    try { await client.delete("/users/" + userId + "/admin_two_factor/remove_authentication_method?method=" + opts.method); output({ removed: true, user_id: userId, method: opts.method }, { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── EMAIL VERIFY ──
+usersResource.command("email-verify")
+  .description("Verify email with token")
+  .requiredOption("--token <token>", "Verification token")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/email_verify", { token: opts.token }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("email-verify-send")
+  .description("Send email verification")
+  .requiredOption("--email <email>", "Email")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/email_verify_send", { email: opts.email }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── DELETE ACCOUNT ──
+usersResource.command("delete-account")
+  .description("Delete the current user account")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { await client.delete("/users/account"); output({ deleted: true }, { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+// ── ADMIN PASSWORD AUTH ──
+usersResource.command("admin-password-auth")
+  .description("Admin password authentication")
+  .requiredOption("--login <login>", "Login")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/admin_password_auth", { login: opts.login }), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
+
+usersResource.command("preferences-notifications-reset")
+  .description("Reset notification preferences")
+  .option("--json", "Output as JSON")
+  .action(async (opts) => {
+    try { output(await client.post("/users/preferences_notifications_reset"), { json: opts.json }); } catch (err) { handleError(err, opts.json); }
+  });
