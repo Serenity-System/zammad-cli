@@ -7,8 +7,10 @@ export const APP_NAME = "zammad";
 /** CLI binary name (replaced during api2cli create) */
 export const APP_CLI = "zammad-cli";
 
-/** API base URL — internal cluster URL (used from Serenity workspaces) */
-export const BASE_URL = "http://zammad-nginx.zammad.svc.cluster.local:8080/api/v1";
+/** API base URL — configurable via ZAMMAD_BASE_URL env var, defaults to internal cluster URL */
+export const BASE_URL =
+  process.env.ZAMMAD_BASE_URL ??
+  "http://zammad-nginx.zammad.svc.cluster.local:8080/api/v1";
 
 /** Auth type: bearer | api-key | basic | custom */
 export const AUTH_TYPE = "bearer";
